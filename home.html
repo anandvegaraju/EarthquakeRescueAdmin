@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyC58pXMY9r2IOUsgVAlhKuAzTVSNRwyEuA",
+            authDomain: "earthquakerescue-dd410.firebaseapp.com",
+            databaseURL: "https://earthquakerescue-dd410.firebaseio.com",
+            projectId: "earthquakerescue-dd410",
+            storageBucket: "earthquakerescue-dd410.appspot.com",
+            messagingSenderId: "123072539566"
+        };
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        var eqcount = database.ref('eqcount');
+        var numeq;
+        var eqref;
+        //var title, table, row, cell1, cell2, eqid;
+
+        eqcount.once('value', function (snapshot) {
+            numeq = snapshot.val();
+            document.getElementById('numeqs').innerHTML = "Number of earthquakes in last one day : " + numeq;
+            for(var i = 0; i < numeq; i++){
+                try{throw i}
+                catch(ii) {
+                    setTimeout(function(){
+                        var j = ii;
+                        var eqid = "earthquake"+j;
+                        //alert(eqid);
+                        eqref = database.ref("earthquake"+j).child("title");
+                        eqref.once('value', function (snapshot) {
+                            var title = snapshot.val();
+                            //alert(title);
+                            var table = document.getElementById("eqlist");
+                            var row = table.insertRow(-1);
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            cell1.innerHTML = title;
+
+                            cell2.innerHTML = "earthquake"+j;
+                        });
+                    },1000);
+                }
+            }
+        });
+        
+    </script>
+</head>
+<body>
+    <center>
+        <b><p id="numeqs"></p></b><br/><br/>
+    </center>
+    <center>
+        <table id="eqlist" border="2">
+            <tr>
+                <th>Earthquake details</th>
+                <th>Earthquake id</th>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>

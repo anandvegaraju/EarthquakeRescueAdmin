@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Earthquake info</title>
-
-
+    <style>
+        .logoutButton{
+            position:fixed;
+            right:10px;
+            top:5px;
+        }
+    </style>
 <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
 <script>
     var config = {
@@ -118,11 +123,22 @@
        }
     });
 
+    function signout() {
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            alert("Signed out");
+            window.location.href = "login.html";
+        }).catch(function(error) {
+            // An error happened.
+        });
+    }
 </script>
 
 </head>
 <body>
-
+<label class="logoutButton">
+    <input name="submit2" type="submit" id="submit2" value="Sign out" onclick="signout()">
+</label>
 <center>
     <b><p id="mesg"></p><br/><center><div id="map" style="width:600px;height:350px"></div></center><br/>
         <p id="mesg1"></p> </b><br/>

@@ -9,6 +9,11 @@
             margin-right: 10px;
             float: left;
         }
+        .logoutButton{
+            position:fixed;
+            right:10px;
+            top:5px;
+        }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
@@ -62,12 +67,22 @@
             }
         });
 
-
+    function signout() {
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            alert("Signed out");
+            window.location.href = "login.html";
+        }).catch(function(error) {
+            // An error happened.
+        });
+    }
 
     </script>
 </head>
 <body>
-
+<label class="logoutButton">
+    <input name="submit2" type="submit" id="submit2" value="Sign out" onclick="signout()">
+</label>
     <center>
         <a href="allEarthquakes.html">Visualize current earthquakes</a>
         <br/>

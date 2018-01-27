@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+    <style>
+        #eqinfodiv {
+            border: 1px #ff7471;
+            margin-right: 10px;
+            float: left;
+        }
+    </style>
+
     <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     <script>
         var config = {
@@ -46,7 +54,9 @@
                 }
             }
         });
-        
+
+
+
     </script>
 </head>
 <body>
@@ -54,7 +64,7 @@
         <b><p id="numeqs"></p></b><br/><br/>
     </center>
     <center>
-        <table id="eqlist" border="2">
+        <table id="eqlist" border="1" cellpadding="1.4" cellspacing="1.3">
             <tr>
                 <th>Earthquake details</th>
                 <th>Earthquake id</th>
@@ -64,5 +74,68 @@
             </tr>
         </table>
     </center>
+
+    <br/><br/>
+
+    <form id="eqinfodiv" style="border: 1px #ff7471">
+        <p><b>Get Earthquake information</b></p>
+        <div id="map" style="width:400px;height:400px"></div>
+        <script>
+            function initmap(){
+                var eqid = document.getElementById('eqid');
+                //alert(eqid.value);
+                var eqref = database.ref(eqid.value);
+                eqref.once('value', function (snapshot) {
+                    alert(snapshot.val().title);
+                    var title = snapshot.val().title;
+                    var latd = snapshot.val().latitude;
+                    var longtd = snapshot.val().longitude;
+                    myMap(latd, longtd, title);
+                });
+            }
+            function myMap(latd, longd, title) {
+                //alert(latd);
+                var uluru = {lat: latd, lng: longd};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: uluru
+                });
+                var contentString;
+                var infowindow = new google.maps.InfoWindow({
+                    content: title
+                });
+
+                var marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map
+                });
+                marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                });
+
+
+            }
+            function redirecttoeq() {
+                var eqid = document.getElementById('eqid');
+                //alert(eqid.value);
+                window.location.href = "earthquakeinfo.html?eqid="+eqid.value;
+                return false;
+            }
+
+        </script>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2FE_psp14ru2OUXJtIbIy4JLQ0nRDikU&callback=initMap">
+        </script>
+        <br/>
+        <br/>
+
+            <input type="text" id="eqid" placeholder="Enter earthquake id">
+            <input type="button" id="geteqinfo" value="Submit" onclick="initmap()">
+            <input type="submit" value="Get more info" onclick="return redirecttoeq()">
+
+
+    </form>
+
+    <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
 </body>
 </html>

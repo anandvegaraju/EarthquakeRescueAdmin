@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Earthquake info</title>
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+<script>
+    var config = {
+        apiKey: "AIzaSyC58pXMY9r2IOUsgVAlhKuAzTVSNRwyEuA",
+        authDomain: "earthquakerescue-dd410.firebaseapp.com",
+        databaseURL: "https://earthquakerescue-dd410.firebaseio.com",
+        projectId: "earthquakerescue-dd410",
+        storageBucket: "earthquakerescue-dd410.appspot.com",
+        messagingSenderId: "123072539566"
+    };
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    var eqid = window.location.search;
+    eqid = eqid.substring(eqid.lastIndexOf('='));
+    eqid = eqid.substring(1);
+    //document.writeln(eqid);
+    //var victimlist =
+
+</script>
+
+<br/><br/>
+<center>
+    <table id="userlist" border="1" cellpadding="1.4" cellspacing="1.3">
+        <tr>
+            <th>Victim name</th>
+            <th>Phone Number</th>
+            <th>Emergency contact name</th>
+            <th>Emergency contact number</th>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>

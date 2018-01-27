@@ -60,7 +60,10 @@
     </script>
 </head>
 <body>
+
     <center>
+        <a href="allEarthquakes.html">Visualize current earthquakes</a>
+        <br/>
         <b><p id="numeqs"></p></b><br/><br/>
     </center>
     <center>
@@ -76,10 +79,10 @@
     </center>
 
     <br/><br/>
-
+    <center>
     <form id="eqinfodiv" style="border: 1px #ff7471">
-        <p><b>Get Earthquake information</b></p>
-        <div id="map" style="width:400px;height:400px"></div>
+        <center><p><b>Get Earthquake information</b></p></center>
+        <center><div id="map" style="width:400px;height:400px"></div></center>
         <script>
             function initmap(){
                 var eqid = document.getElementById('eqid');
@@ -128,14 +131,17 @@
         </script>
         <br/>
         <br/>
+        <center>
 
             <input type="text" id="eqid" placeholder="Enter earthquake id">
             <input type="button" id="geteqinfo" value="Submit" onclick="initmap()">
             <input type="submit" value="Get more info" onclick="return redirecttoeq()">
-
+        </center>
 
     </form>
 
+    </center>
     <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
+
 </body>
 </html>

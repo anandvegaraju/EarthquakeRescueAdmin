@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Earthquake info</title>
-</head>
-<body>
+
+
 <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
 <script>
     var config = {
@@ -21,11 +21,128 @@
     eqid = eqid.substring(eqid.lastIndexOf('='));
     eqid = eqid.substring(1);
     //document.writeln(eqid);
-    //var victimlist =
+    //alert("eqid is "+eqid)
+
+
+    var reglist = database.ref('reglist');
+    var eqref = database.ref(eqid);
+    eqref.once('value', function (snapshot) {
+        var title = snapshot.val().title;
+        var magn = snapshot.val().magnitude;
+        var date = snapshot.val().date;
+        var latd = snapshot.val().latitude;
+        var longd = snapshot.val().longitude;
+        document.getElementById('mesg').innerHTML = "<br><u>Earthquake details</u><br>" + title + "<br>Magnitude : " + magn + "<br>Date : " + date;
+        myMap(latd, longd, title);
+    });
+
+
+
+    reglist.on('value', function (snapshot) {
+        var scount = 0;
+        var uscount = 0;
+        var userlist = snapshot.val();
+        var userarray = userlist.split(" ");
+
+        for(var i = 0; i < userarray.length; i++){
+            var userref = database.ref(userarray[i]);
+            userref.on('value', function (snapshot) {
+                var safe = snapshot.val().safe;
+                var usereq = snapshot.val().eqid;
+                if(!safe && usereq==eqid){
+                    uscount = uscount + 1;
+                    //alert(uscount);
+                }
+                document.getElementById('mesg1').innerHTML = "Number of potential victims(still in danger) in the earthquake vicinity : "+uscount;
+
+                if(safe && usereq==eqid){
+                    scount = scount + 1;
+                    //alert(scount);
+                }
+
+
+            });
+        }
+        //renderchart(scount);
+    });
+
+
+
+    var reglist = database.ref('reglist');
+    reglist.once('value', function(snapshot){
+       var userlist = snapshot.val();
+       var userarray = userlist.split(" ");
+       //alert(userarray[0]);
+       for(var i = 0; i < userarray.length; i++){
+           //alert(i);
+           var userr = userarray[i];
+           //alert(userr);
+           var userref = database.ref(userr);
+           userref.once('value', function (snapshot) {
+               var eq = snapshot.val().eqid;
+               //alert(eqid);
+               if(eq == eqid){
+                   var uname = snapshot.val().name;
+                   //alert(uname);
+                   var ename = snapshot.val().ename;
+                   var econtactno = snapshot.val().econtact;
+                   var safe = snapshot.val().safe;
+                   var table = document.getElementById("userlist");
+                   var row = table.insertRow(-1);
+                   var cell1 = row.insertCell(0);
+                   var cell2 = row.insertCell(1);
+                   var cell3 = row.insertCell(2);
+                   var cell4 = row.insertCell(3);
+                   var cell5 = row.insertCell(4);
+                   cell1.innerHTML = uname;
+                   cell2.innerHTML = userr;
+                   cell3.innerHTML = ename;
+                   cell4.innerHTML = econtactno;
+                   cell5.innerHTML = safe;
+
+               }
+           });
+           //
+
+       }
+    });
 
 </script>
 
-<br/><br/>
+</head>
+<body>
+
+<center>
+    <b><p id="mesg"></p><br/><center><div id="map" style="width:600px;height:350px"></div></center><br/>
+        <p id="mesg1"></p> </b><br/>
+</center><br/>
+<script>
+    function myMap(latd, longd, title) {
+        //alert(latd);
+        var uluru = {lat: latd, lng: longd};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 4,
+            center: uluru
+        });
+        var contentString;
+        var infowindow = new google.maps.InfoWindow({
+            content: title
+        });
+
+        var marker = new google.maps.Marker({
+            position: uluru,
+            map: map
+        });
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
+
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2FE_psp14ru2OUXJtIbIy4JLQ0nRDikU&callback=initMap">
+</script>
 <center>
     <table id="userlist" border="1" cellpadding="1.4" cellspacing="1.3">
         <tr>
@@ -33,6 +150,7 @@
             <th>Phone Number</th>
             <th>Emergency contact name</th>
             <th>Emergency contact number</th>
+            <th>Safe</th>
         </tr>
         <tr>
             <td></td>

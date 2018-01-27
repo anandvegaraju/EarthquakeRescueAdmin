@@ -22,6 +22,13 @@
             messagingSenderId: "123072539566"
         };
         firebase.initializeApp(config);
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                //alert("welcome");
+            }else{
+                window.location.href = "404.html";
+            }
+        });
         var database = firebase.database();
         var eqcount = database.ref('eqcount');
         var numeq;
